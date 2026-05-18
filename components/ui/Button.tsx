@@ -4,7 +4,7 @@ interface Props {
   title: string;
   onPress: () => void;
   disabled?: boolean;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'ghost';
   className?: string;
 }
 
@@ -15,21 +15,32 @@ export function Button({
   variant = 'primary',
   className = '',
 }: Props) {
-  const base =
-    variant === 'primary'
-      ? 'bg-primary active:bg-primary-dark'
-      : 'bg-gray-100 active:bg-gray-200';
-  const textColor = variant === 'primary' ? 'text-white' : 'text-gray-700';
+  const styles = {
+    primary: {
+      container: 'bg-primary active:bg-primary-hover',
+      text: 'text-white',
+    },
+    secondary: {
+      container: 'bg-surface-raised border border-border active:bg-zinc-700',
+      text: 'text-zinc-100',
+    },
+    ghost: {
+      container: 'active:bg-surface-raised',
+      text: 'text-zinc-400',
+    },
+  }[variant];
 
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      className={`rounded-xl py-3 px-5 items-center ${base} ${
-        disabled ? 'opacity-50' : ''
+      className={`rounded-lg py-3 px-5 items-center ${styles.container} ${
+        disabled ? 'opacity-40' : ''
       } ${className}`}
     >
-      <Text className={`font-semibold text-sm ${textColor}`}>{title}</Text>
+      <Text className={`font-medium text-sm tracking-tight ${styles.text}`}>
+        {title}
+      </Text>
     </Pressable>
   );
 }

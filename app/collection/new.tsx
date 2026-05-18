@@ -26,11 +26,11 @@ export default function NewCollectionScreen() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white"
+      className="flex-1 bg-black"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View className="flex-1 px-6 pt-8">
-        <Text className="text-gray-500 mb-6">
+        <Text className="text-sm text-zinc-500 mb-6 leading-5">
           Give your study collection a name, then upload PDFs to it.
         </Text>
 
@@ -46,7 +46,7 @@ export default function NewCollectionScreen() {
           title={loading ? 'Creating…' : 'Create collection'}
           onPress={handleCreate}
           disabled={loading || !name.trim()}
-          className="mt-4"
+          className="mt-2"
         />
       </View>
     </KeyboardAvoidingView>

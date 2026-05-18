@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { Link } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -17,7 +18,7 @@ export default function LoginScreen() {
     try {
       await signIn(email, password);
     } catch (err: any) {
-      Alert.alert('Login failed', err.message ?? 'Please try again.');
+      Alert.alert('Sign in failed', err.message ?? 'Please try again.');
     } finally {
       setLoading(false);
     }
@@ -25,12 +26,17 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white"
+      className="flex-1 bg-black"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      <StatusBar style="light" />
       <View className="flex-1 justify-center px-6">
-        <Text className="text-3xl font-bold text-gray-900 mb-2">Welcome back</Text>
-        <Text className="text-gray-500 mb-8">Sign in to your Studer account</Text>
+        <Text className="text-2xl font-semibold text-zinc-100 mb-1 tracking-tight">
+          Welcome back
+        </Text>
+        <Text className="text-sm text-zinc-500 mb-8">
+          Sign in to your Studer account
+        </Text>
 
         <Input
           label="Email"
@@ -52,13 +58,13 @@ export default function LoginScreen() {
           title={loading ? 'Signing in…' : 'Sign in'}
           onPress={handleLogin}
           disabled={loading}
-          className="mt-4"
+          className="mt-2"
         />
 
         <Link href="/(auth)/register" asChild>
-          <Text className="text-center text-gray-500 mt-4">
+          <Text className="text-center text-zinc-500 text-sm mt-5">
             Don't have an account?{' '}
-            <Text className="text-primary font-semibold">Register</Text>
+            <Text className="text-primary">Register</Text>
           </Text>
         </Link>
       </View>

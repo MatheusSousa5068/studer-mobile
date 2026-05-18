@@ -16,21 +16,22 @@ export function useQuestions(collectionId: string) {
   };
 }
 
-export function useTodayQuestion() {
-  const { data, error, isLoading, mutate } = useSWR<Question | null>(
-    'today-question',
+export function useTodayQuestions() {
+  const { data, error, isLoading, mutate } = useSWR<Question[]>(
+    'today-questions',
     async () => {
       const collections = await api.collections.list();
+      const all: Question[] = [];
       for (const c of collections) {
         const questions = await api.collections.questions(c.id);
-        if (questions.length > 0) return questions[0];
+        all.push(...questions);
       }
-      return null;
+      return all;
     }
   );
 
   return {
-    question: data ?? null,
+    questions: data ?? [],
     isLoading,
     error,
     mutate,

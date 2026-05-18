@@ -44,6 +44,14 @@ async function postForm<T>(path: string, form: FormData): Promise<T> {
   return res.json();
 }
 
+async function del(path: string): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    method: 'DELETE',
+    headers: await authHeader(),
+  });
+  if (!res.ok) throw new Error(`DELETE ${path} failed: ${res.status}`);
+}
+
 export const api = {
   collections: {
     list: () => get<Collection[]>('/collections'),
@@ -62,6 +70,10 @@ export const api = {
       get<Question[]>(`/collections/${id}/questions`),
     documents: (id: string) =>
       get<Document[]>(`/collections/${id}/documents`),
+    delete: (id: string) =>
+      del(`/collections/${id}`),
+    deleteDocument: (collectionId: string, documentId: string) =>
+      del(`/collections/${collectionId}/documents/${documentId}`),
   },
   answers: {
     record: (question_id: string, answered_option: number) =>

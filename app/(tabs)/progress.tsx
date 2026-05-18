@@ -8,16 +8,18 @@ export default function ProgressScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#6366f1" />
+      <View className="flex-1 items-center justify-center bg-black">
+        <ActivityIndicator size="large" color="#0070f3" />
       </View>
     );
   }
 
   if (!stats) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-gray-400">No data yet. Answer some questions first!</Text>
+      <View className="flex-1 items-center justify-center bg-black">
+        <Text className="text-zinc-600 text-sm">
+          No data yet — answer some questions first.
+        </Text>
       </View>
     );
   }
@@ -26,43 +28,55 @@ export default function ProgressScreen() {
   const weakTopics = stats.by_topic.filter((t) => t.accuracy < 0.6);
 
   return (
-    <ScrollView className="flex-1 bg-gray-50" contentContainerClassName="p-4 gap-4">
-      <View className="bg-white rounded-2xl p-5 shadow-sm">
-        <Text className="text-sm text-gray-500 mb-1">Overall accuracy</Text>
-        <Text className="text-4xl font-bold text-primary">{accuracy}%</Text>
-        <ProgressBar progress={stats.accuracy} className="mt-3" />
-        <Text className="text-xs text-gray-400 mt-2">
-          {stats.total_correct} / {stats.total_answered} correct
+    <ScrollView
+      className="flex-1 bg-black"
+      contentContainerStyle={{ padding: 16, gap: 12 }}
+    >
+      <View className="bg-surface border border-border rounded-xl p-5">
+        <Text className="text-xs text-zinc-500 uppercase tracking-wider mb-3">
+          Overall accuracy
+        </Text>
+        <Text className="text-4xl font-semibold text-zinc-100 tracking-tight">
+          {accuracy}
+          <Text className="text-2xl text-zinc-400">%</Text>
+        </Text>
+        <ProgressBar progress={stats.accuracy} className="mt-3 mb-2" />
+        <Text className="text-xs text-zinc-600">
+          {stats.total_correct} correct out of {stats.total_answered} answered
         </Text>
       </View>
 
-      <View className="bg-white rounded-2xl p-5 shadow-sm">
-        <Text className="text-base font-semibold text-gray-900 mb-3">By topic</Text>
-        {stats.by_topic.map((t, i) => (
-          <View key={i} className="mb-3">
-            <View className="flex-row justify-between mb-1">
-              <Text className="text-sm text-gray-700">{t.topic_tag ?? 'General'}</Text>
-              <Text className="text-sm text-gray-500">
+      {stats.by_topic.length > 0 && (
+        <View className="bg-surface border border-border rounded-xl p-5">
+          <Text className="text-xs text-zinc-500 uppercase tracking-wider mb-4">
+            By topic
+          </Text>
+          {stats.by_topic.map((t, i) => (
+            <View key={i} className="mb-4 last:mb-0">
+              <View className="flex-row justify-between mb-1.5">
+                <Text className="text-sm text-zinc-300">{t.topic_tag ?? 'General'}</Text>
+                <Text className="text-sm text-zinc-500">
+                  {Math.round(t.accuracy * 100)}%
+                </Text>
+              </View>
+              <ProgressBar progress={t.accuracy} />
+            </View>
+          ))}
+        </View>
+      )}
+
+      {weakTopics.length > 0 && (
+        <View className="bg-red-950 border border-red-900 rounded-xl p-5">
+          <Text className="text-xs text-red-400 uppercase tracking-wider mb-3">
+            Needs work · below 60%
+          </Text>
+          {weakTopics.map((t, i) => (
+            <View key={i} className="flex-row justify-between mb-2 last:mb-0">
+              <Text className="text-sm text-red-300">{t.topic_tag ?? 'General'}</Text>
+              <Text className="text-sm text-red-500">
                 {Math.round(t.accuracy * 100)}%
               </Text>
             </View>
-            <ProgressBar progress={t.accuracy} />
-          </View>
-        ))}
-        {stats.by_topic.length === 0 && (
-          <Text className="text-gray-400 text-sm">No topic data yet.</Text>
-        )}
-      </View>
-
-      {weakTopics.length > 0 && (
-        <View className="bg-red-50 rounded-2xl p-5">
-          <Text className="text-base font-semibold text-red-700 mb-2">
-            Weak topics (&lt;60%)
-          </Text>
-          {weakTopics.map((t, i) => (
-            <Text key={i} className="text-sm text-red-600 mb-1">
-              • {t.topic_tag ?? 'General'} — {Math.round(t.accuracy * 100)}%
-            </Text>
           ))}
         </View>
       )}
